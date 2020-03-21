@@ -249,8 +249,15 @@ function receivedMessage(event) {
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
 
-    sendTextMessage(senderID, "Quick reply tapped");
-    return;
+      if(quickReplyPayload == "action"){
+        sendTextMessage(senderID, "quickReplyPayload");
+        return;
+
+      }
+      else {
+        sendTextMessage(senderID, "Nothing");
+        return;
+      }
   }
 
   if (messageText) {
@@ -366,13 +373,15 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback
   // button for Structured Messages.
   var payload = event.postback.payload;
-
+console.log("Received Postbackkk")
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
   sendTextMessage(senderID, "Postback called");
+
+
 }
 
 /*
@@ -621,7 +630,7 @@ function sendButtonMessage(recipientId) {
           }, {
             type: "postback",
             title: "Trigger Postback",
-            payload: "DEVELOPER_DEFINED_PAYLOAD"
+            payload: "hello"
           }, {
             type: "phone_number",
             title: "Call Phone Number",
@@ -767,7 +776,7 @@ function sendQuickReply(recipientId) {
         {
           "content_type":"text",
           "title":"Action",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
+          "payload":"action"
         },
         {
           "content_type":"text",
