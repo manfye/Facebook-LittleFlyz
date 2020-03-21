@@ -2,5 +2,5 @@
     "appSecret": "8218f34ee8e351a9fd8d97d628449153",
     "pageAccessToken": "EAAhgYsNfOVgBABhRle0U7xBO0fy1EOBO7YXZBoTa6YRGVvwmTzadXDnKSs8WdvUsxwTh6SvtLfZBmxQ5QhBwIRCwbgt7sXhTC1cMZCbPuq5MnklOMuS0vZC3wCOgE92k8taSrcZCkxlwxIPw1RdqT2VbNtiwWBfo8lFhsZCHZAIm4LItoQUYAeA",
     "validationToken": "TOKEN",
-    "serverURL": "https://c995a589.ngrok.io"
+    "serverURL": "http://57d1cf63.ngrok.io"
 }
