@@ -86,7 +86,7 @@ app.get('/webhook', function(req, res) {
  */
 app.post('/webhook', function (req, res) {
   var data = req.body;
-
+console.log(data)
   // Make sure this is a page subscription
   if (data.object == 'page') {
     // Iterate over each entry
@@ -377,9 +377,76 @@ console.log("Received Postbackkk")
   console.log("Received postback for user %d and page %d with payload '%s' " +
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
+
   // When a postback is called, we'll send a message back to the sender to
   // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
+  if(payload == "mask"){
+    axios.get('hhttps://portal.orangerx.co/api/v1/wmm/2A?_format=json')
+  .then(response => {
+    console.log(response.data.length);
+    console.log(response.data[0]);
+    var messageData = {
+      recipient: {
+        id: senderID
+      },
+      message: {
+        text: 'Latest update: ' + `
+        `+
+              response.data[0].webform_submission_value_3 + `
+              For:`+ response.data[0].webform_submission_value_7+ `
+              in:`+ response.data[0].webform_submission_value_6+ `
+        `
+      }
+    }
+
+    callSendAPI(messageData);
+
+    //sendTextMessage(senderID, "Postback Mask");
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    return;
+  }
+  else if(payload =="myth"){
+    var messageData = {
+      recipient: {
+        id: senderID
+      },
+      message: {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "button",
+            text: "What are the myth you interested in?",
+            buttons:[{
+              type: "postback",
+              title: "Is warm water works against COVID-19?",
+              payload: "hello"
+            }, {
+              type: "postback",
+              title: "Will COVID-19 die in hot temperature?",
+              payload: "hello"
+            }, {
+              type: "postback",
+              title: "More Info",
+              payload: "hello"
+            }]
+          }
+        }
+      }
+    };
+  
+    callSendAPI(messageData);
+    return;
+  }
+  else if(payload =="news"){
+
+    sendTextMessage(senderID, "News update blah blah blah");
+    return;
+  }
 
 
 }
@@ -450,32 +517,35 @@ Once you've finished these steps, try typing “video” or “image”.
 }
 
 function sendHiMessage(recipientId, messageText) {
-
-axios.get('http://portal.orangerx.co/rest/v1/product/'+messageText+'?_format=json')
-  .then(response => {
-    console.log(messageText);
-    console.log(response.data.length);
-    console.log(response.data[0].field_product_price);
-
-    var messageData = {
-      recipient: {
-        id: recipientId
-      },
-      message: {
-        text: 'Product Name: '+response.data[0].field_product_name +'\n' +
-        'Price: RM '+response.data[0].field_product_price + '\n'+
-        'MAL No: '+response.data[0].field_mal_no
-        
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "Hello, what can I help you today?",
+          buttons:[{
+            type: "postback",
+            title: "Mask update",
+            payload: "mask"
+          }, {
+            type: "postback",
+            title: "Mythbusters",
+            payload: "myth"
+          }, {
+            type: "postback",
+            title: "News and Updates",
+            payload: "news"
+          }]
+        }
       }
     }
-  
-    callSendAPI(messageData);
+  };
 
-
-  })
-  .catch(error => {
-    console.log(error);
-  });
+  callSendAPI(messageData);
 
  
 }
