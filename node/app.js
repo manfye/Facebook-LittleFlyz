@@ -11,6 +11,7 @@
 'use strict';
 
 const axios = require('axios');
+const { imageHash }= require('image-hash');
 
 const
   bodyParser = require('body-parser'),
@@ -240,6 +241,7 @@ function receivedMessage(event) {
   var quickReply = message.quick_reply;
 
   if (isEcho) {
+    
     // Just logging message echoes to console
     console.log("Received echo for message %s and app %d with metadata %s",
       messageId, appId, metadata);
@@ -324,10 +326,62 @@ function receivedMessage(event) {
         break;
 
       default:
-       sendHiMessage(senderID, messageText);
+        URLChecker(senderID, messageText);
     }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
+    console.log("ATTACHMENT RECEIVED")
+    if (messageAttachments[0].type == 'image'){
+        imageHash(messageAttachments[0].payload.url, 16, true, (error, data) => {
+          if (error) throw error;
+  console.log(data);
+  if(data =="00000000fffbffffc041a05f807ff1cf83ff80cba047807fe003fdc3c007c0ff"){
+    var messageData = {
+      recipient: {
+        id: senderID
+      },
+      message: {
+        attachment: {
+          type: "image",
+          payload: {
+            url: "https://orangerx.b-cdn.net/87840879_215226342888529_4570608203884134400_n.jpg"
+          }
+        }
+      }
+    };
+    callSendAPI(messageData);
+    sendTextMessage(senderID, "This is fake news + Explaination");
+  }
+  else if(data =="00000000fffdffffc241a05f807ff1c783ff80cba047807fe003fdc3c007c0ff"){
+    var messageData = {
+      recipient: {
+        id: senderID
+      },
+      message: {
+        attachment: {
+          type: "image",
+          payload: {
+            url: "https://orangerx.b-cdn.net/87840879_215226342888529_4570608203884134400_n.jpg"
+          }
+        }
+      }
+    };
+    callSendAPI(messageData);
+    sendTextMessage(senderID, "This is fake news + Explaination");
+  }
+  else{
+    console.log(data)
+    sendTextMessage(senderID, "We will follow up on this image later");
+  }
+});
+//sendTextMessage(senderID, messageAttachments[0].payload.url);
+
+    }
+    else {
+      sendTextMessage(senderID, "Message with attachment received");
+
+    }
+    console.log(messageAttachments[0].type)
+    console.log(messageAttachments[0])
   }
 }
 
@@ -514,6 +568,17 @@ Once you've finished these steps, try typing “video” or “image”.
   } else {
     next.apply(this, [recipientId, ...args]);
   }
+}
+
+function URLChecker(receiptId, messageText){
+  if (messageText=="https://www.facebook.com/WongYueeHarng/photos/a.421847547901291/2805492766203412/"){
+    sendTextMessage(receiptId, "This news is correct");
+  }
+  else(
+    sendHiMessage(receiptId, messageText)
+
+  )
+  
 }
 
 function sendHiMessage(recipientId, messageText) {
