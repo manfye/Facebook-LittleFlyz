@@ -444,12 +444,8 @@ console.log("Received Postbackkk")
         id: senderID
       },
       message: {
-        text: 'Latest update: ' + `
-        `+
-              response.data[0].webform_submission_value_3 + `
-              For:`+ response.data[0].webform_submission_value_7+ `
-              in:`+ response.data[0].webform_submission_value_6+ `
-        `
+        text: 'Latest update of mask availability in your area:' +  response.data[0].webform_submission_value_3 + `
+              Contact:`+ response.data[0].webform_submission_value
       }
     }
 
@@ -476,18 +472,15 @@ console.log("Received Postbackkk")
             template_type: "button",
             text: "What are the myth you interested in?",
             buttons:[{
-              type: "postback",
-              title: "Is warm water works against COVID-19?",
-              payload: "hello"
+              type: "web_url",
+              url: "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters",
+              title: "COVID Mythbuster"
             }, {
-              type: "postback",
-              title: "Will COVID-19 die in hot temperature?",
-              payload: "hello"
-            }, {
-              type: "postback",
-              title: "More Info",
-              payload: "hello"
-            }]
+              type: "web_url",
+              url: "https://www.oculus.com/en-us/rift/",
+              title: "Ask an expert"
+            }, 
+          ]
           }
         }
       }
@@ -498,7 +491,7 @@ console.log("Received Postbackkk")
   }
   else if(payload =="news"){
 
-    sendTextMessage(senderID, "News update blah blah blah");
+    sendTextMessage(senderID, "The latest confirm cased in Malaysia as of 26/03/2020 is: 2016 confirmed case. /n Be safe and #StayAtHome");
     return;
   }
 
@@ -574,9 +567,11 @@ function URLChecker(receiptId, messageText){
   if (messageText=="https://www.facebook.com/WongYueeHarng/photos/a.421847547901291/2805492766203412/"){
     sendTextMessage(receiptId, "This news is correct");
   }
+  if (messageText=="https://m.facebook.com/WongYueeHarng/photos/a.421847547901291/2805492766203412/"){
+    sendTextMessage(receiptId, "This news is correct");
+  }
   else(
-    sendHiMessage(receiptId, messageText)
-
+    sendHiMessage(receiptId, "Currently our data doesn't have this link, we will verify the data and get back to you very soon. Thanks for your information")
   )
   
 }
@@ -602,7 +597,7 @@ function sendHiMessage(recipientId, messageText) {
             payload: "myth"
           }, {
             type: "postback",
-            title: "News and Updates",
+            title: "Corona Updates",
             payload: "news"
           }]
         }
